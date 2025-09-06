@@ -105,21 +105,11 @@ struct MapView: View {
         
         print("Map tapped at: \(location)")
         
-        // Convert tap location to normalized coordinates (0-1)
-        // Since the container handles scaling/offsetting, we need to account for that
-        let containerScale = mapManager.scale
-        let containerOffset = mapManager.offset
-        
-        // Reverse the container transformations to get the original tap location
-        let originalLocation = CGPoint(
-            x: (location.x - containerOffset.width) / containerScale,
-            y: (location.y - containerOffset.height) / containerScale
-        )
-        
-        // Convert to normalized coordinates
+        // Convert tap location directly to normalized coordinates (0-1)
+        // Since beacon dots are in the same container as the map, we can use the tap location directly
         let normalizedLocation = CGPoint(
-            x: originalLocation.x / geometry.size.width,
-            y: originalLocation.y / geometry.size.height
+            x: location.x / geometry.size.width,
+            y: location.y / geometry.size.height
         )
         
         print("Normalized location: \(normalizedLocation)")
@@ -142,7 +132,7 @@ struct BeaconDot: View {
     let beacon: PlacedBeacon
     
     var body: some View {
-        // Position the dot relative to the map image within the container
+        // Position the dot using normalized coordinates within the container
         // The container handles all scaling and offsetting, so we just use normalized coordinates
         Circle()
             .fill(beacon.color)
