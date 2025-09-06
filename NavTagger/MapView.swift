@@ -22,11 +22,31 @@ struct MapView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: .infinity)
                     
-                    // a. Beacon dots/pins placed by user (stacked above map)
+                    // Grid overlay for coordinate system testing
+                    Image("blackGrid")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: .infinity)
+                        .opacity(0.5) // Make it semi-transparent so we can see the map underneath
+                    
+                    // a. Beacon dots/pins placed by user (stacked above map and grid)
                     ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                        BeaconDot(beacon: beacon)
+                        BeaconDot(beacon: beacon, mapManager: mapManager, geometry: geometry)
                     }
+                    
+                    // Debug overlay - border around the original map rect (before transforms)
+                    Rectangle()
+                        .stroke(Color.red, lineWidth: 2)
+                        .frame(
+                            width: geometry.size.height/2,  // Original map width (square)
+                            height: geometry.size.height/2  // Original map height (square)
+                        )
+                        .position(
+                            x: geometry.size.width / 2,   // Center horizontally
+                            y: geometry.size.height / 2   // Center vertically
+                        )
                 }
+                .coordinateSpace(name: "mapSpace")
                 .scaleEffect(mapManager.scale)
                 .offset(mapManager.offset)
                 .clipped()
@@ -51,10 +71,14 @@ struct MapView: View {
                             }
                     )
                 )
-                .onTapGesture { location in
-                    // Handle tap for beacon placement
-                    handleMapTap(at: location, in: geometry)
-                }
+                .gesture(
+                    SpatialTapGesture()
+                        .onEnded { value in
+                            // Get tap location in the map's coordinate space
+                            let tapLocation = value.location
+                            handleMapTap(at: tapLocation, in: geometry)
+                        }
+                )
                 
                 // Armed Beacon Hint (outside the container so it doesn't move)
                 if let armedBeacon = beaconManager.armedBeacon {
@@ -105,11 +129,14 @@ struct MapView: View {
         
         print("Map tapped at: \(location)")
         
-        // Convert tap location directly to normalized coordinates (0-1)
-        // Since beacon dots are in the same container as the map, we can use the tap location directly
+        // Get the authoritative displayed map rect
+        let rect = mapManager.getDisplayedMapRect(in: geometry)
+        print("Displayed map rect: \(rect)")
+        
+        // Normalize tap location within the displayed map rect
         let normalizedLocation = CGPoint(
-            x: location.x / geometry.size.width,
-            y: location.y / geometry.size.height
+            x: (location.x - rect.minX) / rect.width,
+            y: (location.y - rect.minY) / rect.height
         )
         
         print("Normalized location: \(normalizedLocation)")
@@ -130,10 +157,24 @@ struct MapView: View {
 
 struct BeaconDot: View {
     let beacon: PlacedBeacon
+    @ObservedObject var mapManager: MapManager
+    let geometry: GeometryProxy
     
     var body: some View {
-        // Position the dot using normalized coordinates within the container
-        // The container handles all scaling and offsetting, so we just use normalized coordinates
+        // Get the original (untransformed) map rect
+        let originalRect = CGRect(
+            x: (geometry.size.width - geometry.size.height) / 2,  // Center horizontally
+            y: 0,                                                 // Top edge
+            width: geometry.size.height,                          // Square width
+            height: geometry.size.height                          // Square height
+        )
+        
+        // Convert normalized coordinates to original screen position
+        let screenPosition = CGPoint(
+            x: originalRect.minX + (beacon.position.x * originalRect.width),
+            y: originalRect.minY + (beacon.position.y * originalRect.height)
+        )
+        
         Circle()
             .fill(beacon.color)
             .frame(width: 12, height: 12)
@@ -141,10 +182,7 @@ struct BeaconDot: View {
                 Circle()
                     .stroke(Color.white, lineWidth: 2)
             )
-        .position(
-            x: beacon.position.x * UIScreen.main.bounds.width,
-            y: beacon.position.y * UIScreen.main.bounds.height
-        )
+        .position(screenPosition)
     }
 }
 

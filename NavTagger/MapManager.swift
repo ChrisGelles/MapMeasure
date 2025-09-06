@@ -87,23 +87,23 @@ class MapManager: NSObject, ObservableObject {
         )
     }
     
-    func getMapFrame(in geometry: GeometryProxy) -> CGRect {
+    func getDisplayedMapRect(in geometry: GeometryProxy) -> CGRect {
         let screenSize = geometry.size
         let imageAspectRatio: CGFloat = 1.0 // Square image (2048x2048)
         
-        // Always fit to screen height (top to bottom)
+        // Always fit to screen height (top to bottom) - matches the view's .frame(maxHeight: .infinity)
         let mapSize = CGSize(
             width: screenSize.height * imageAspectRatio,
             height: screenSize.height
         )
         
-        // Center horizontally
+        // Center horizontally - matches the view's aspectRatio(.fit) behavior
         let mapOrigin = CGPoint(
             x: (screenSize.width - mapSize.width) / 2,
             y: 0
         )
         
-        // Apply scale and offset
+        // Apply scale and offset - matches the view's .scaleEffect and .offset
         let scaledSize = CGSize(
             width: mapSize.width * scale,
             height: mapSize.height * scale
@@ -115,6 +115,11 @@ class MapManager: NSObject, ObservableObject {
         )
         
         return CGRect(origin: scaledOrigin, size: scaledSize)
+    }
+    
+    // Keep the old method for backward compatibility
+    func getMapFrame(in geometry: GeometryProxy) -> CGRect {
+        return getDisplayedMapRect(in: geometry)
     }
     
     // MARK: - Location Permission
