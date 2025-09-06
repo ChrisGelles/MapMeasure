@@ -16,10 +16,11 @@ struct MapView: View {
             ZStack {
                 // Map Image with Beacon Dots - All in one view with unified gestures
                 ZStack {
-                    // Map Image
+                    // Map Image - fill screen height
                     Image("myFirstFloor_v03-metric")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: .infinity)
                         .scaleEffect(mapManager.scale)
                         .offset(mapManager.offset)
                         .clipped()
@@ -55,11 +56,8 @@ struct MapView: View {
                     )
                 )
                 .onTapGesture { location in
-                    // Only handle tap if it's within the map bounds
-                    let mapFrame = mapManager.getMapFrame(in: geometry)
-                    if mapFrame.contains(location) {
-                        handleMapTap(at: location, in: geometry)
-                    }
+                    // Handle tap for beacon placement
+                    handleMapTap(at: location, in: geometry)
                 }
                 
                 // Armed Beacon Hint
@@ -100,17 +98,27 @@ struct MapView: View {
                 }
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
     
     private func handleMapTap(at location: CGPoint, in geometry: GeometryProxy) {
-        guard let armedBeacon = beaconManager.armedBeacon else { return }
+        guard let armedBeacon = beaconManager.armedBeacon else { 
+            print("No armed beacon for placement")
+            return 
+        }
+        
+        print("Map tapped at: \(location)")
         
         // Convert tap location to map coordinates
         let mapFrame = mapManager.getMapFrame(in: geometry)
+        print("Map frame: \(mapFrame)")
+        
         let relativeLocation = CGPoint(
             x: (location.x - mapFrame.minX) / mapFrame.width,
             y: (location.y - mapFrame.minY) / mapFrame.height
         )
+        
+        print("Relative location: \(relativeLocation)")
         
         // Clamp to map bounds
         let clampedLocation = CGPoint(
@@ -118,8 +126,11 @@ struct MapView: View {
             y: max(0, min(1, relativeLocation.y))
         )
         
+        print("Clamped location: \(clampedLocation)")
+        
         // Place the beacon
         beaconManager.placeBeacon(armedBeacon, at: clampedLocation)
+        print("Beacon placed: \(armedBeacon.name)")
     }
 }
 

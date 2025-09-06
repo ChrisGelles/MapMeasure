@@ -72,24 +72,13 @@ class MapManager: NSObject, ObservableObject {
     // MARK: - Map Frame Calculation
     func getMapSize(in geometry: GeometryProxy) -> CGSize {
         let screenSize = geometry.size
-        let imageAspectRatio: CGFloat = 1.0 // Assuming square image (2048x2048)
-        let screenAspectRatio = screenSize.width / screenSize.height
+        let imageAspectRatio: CGFloat = 1.0 // Square image (2048x2048)
         
-        var mapSize: CGSize
-        
-        if screenAspectRatio > imageAspectRatio {
-            // Screen is wider than image - fit to height
-            mapSize = CGSize(
-                width: screenSize.height * imageAspectRatio,
-                height: screenSize.height
-            )
-        } else {
-            // Screen is taller than image - fit to width
-            mapSize = CGSize(
-                width: screenSize.width,
-                height: screenSize.width / imageAspectRatio
-            )
-        }
+        // Always fit to screen height (top to bottom)
+        let mapSize = CGSize(
+            width: screenSize.height * imageAspectRatio,
+            height: screenSize.height
+        )
         
         // Apply scale
         return CGSize(
@@ -100,33 +89,19 @@ class MapManager: NSObject, ObservableObject {
     
     func getMapFrame(in geometry: GeometryProxy) -> CGRect {
         let screenSize = geometry.size
-        let imageAspectRatio: CGFloat = 1.0 // Assuming square image (2048x2048)
-        let screenAspectRatio = screenSize.width / screenSize.height
+        let imageAspectRatio: CGFloat = 1.0 // Square image (2048x2048)
         
-        var mapSize: CGSize
-        var mapOrigin: CGPoint
+        // Always fit to screen height (top to bottom)
+        let mapSize = CGSize(
+            width: screenSize.height * imageAspectRatio,
+            height: screenSize.height
+        )
         
-        if screenAspectRatio > imageAspectRatio {
-            // Screen is wider than image - fit to height
-            mapSize = CGSize(
-                width: screenSize.height * imageAspectRatio,
-                height: screenSize.height
-            )
-            mapOrigin = CGPoint(
-                x: (screenSize.width - mapSize.width) / 2,
-                y: 0
-            )
-        } else {
-            // Screen is taller than image - fit to width
-            mapSize = CGSize(
-                width: screenSize.width,
-                height: screenSize.width / imageAspectRatio
-            )
-            mapOrigin = CGPoint(
-                x: 0,
-                y: (screenSize.height - mapSize.height) / 2
-            )
-        }
+        // Center horizontally
+        let mapOrigin = CGPoint(
+            x: (screenSize.width - mapSize.width) / 2,
+            y: 0
+        )
         
         // Apply scale and offset
         let scaledSize = CGSize(
