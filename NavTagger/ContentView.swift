@@ -135,7 +135,7 @@ struct DrawerContent: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
         )
-        .frame(maxHeight: geometry.size.height * 0.6)
+        .frame(maxHeight: geometry.size.height * 0.2)
     }
 }
 

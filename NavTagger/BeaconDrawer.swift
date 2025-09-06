@@ -13,15 +13,15 @@ struct BeaconDrawer: View {
     let geometry: GeometryProxy
     
     private let columns = [
-        GridItem(.adaptive(minimum: 120), spacing: 12)
+        GridItem(.adaptive(minimum: 80), spacing: 8)
     ]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
                 Text("Beacon Placement")
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.semibold)
                 
                 Spacer()
@@ -127,26 +127,26 @@ struct BeaconButton: View {
                 ZStack {
                     Circle()
                         .fill(beacon.color)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 28, height: 28)
                     
                     if isPlaced {
                         Image(systemName: "checkmark")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundColor(.white)
                     } else {
                         Image(systemName: "target")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.white)
                     }
                 }
                 
                 // Beacon Name
                 Text(beacon.name)
-                    .font(.caption)
-                    .fontWeight(.medium)
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundColor(.primary)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 
                 // Status Indicator
                 if isArmed {
@@ -171,8 +171,8 @@ struct BeaconButton: View {
                         )
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+            .padding(.horizontal, 6)
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 12)

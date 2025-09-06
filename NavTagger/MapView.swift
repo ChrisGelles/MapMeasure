@@ -43,7 +43,11 @@ struct MapView: View {
                         )
                     )
                     .onTapGesture { location in
-                        handleMapTap(at: location, in: geometry)
+                        // Only handle tap if it's within the map bounds
+                        let mapFrame = mapManager.getMapFrame(in: geometry)
+                        if mapFrame.contains(location) {
+                            handleMapTap(at: location, in: geometry)
+                        }
                     }
                 
                 // Beacon Dots
@@ -128,25 +132,13 @@ struct BeaconDot: View {
             y: mapFrame.minY + (beacon.position.y * mapFrame.height)
         )
         
-        VStack(spacing: 2) {
-            Circle()
-                .fill(beacon.color)
-                .frame(width: 12, height: 12)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 2)
-                )
-            
-            Text(beacon.name)
-                .font(.caption2)
-                .foregroundColor(.primary)
-                .padding(.horizontal, 4)
-                .padding(.vertical, 2)
-                .background(
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color(.systemBackground).opacity(0.8))
-                )
-        }
+        Circle()
+            .fill(beacon.color)
+            .frame(width: 12, height: 12)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 2)
+            )
         .position(position)
     }
 }
