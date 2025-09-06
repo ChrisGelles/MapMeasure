@@ -14,26 +14,22 @@ struct MapView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Map Image with Beacon Dots - All in one view with unified gestures
+                // 1. Container (can be panned and zoomed with gestures. Everything inside moves together)
                 ZStack {
-                    // Map Image - fill screen height
+                    // b. Map Image
                     Image("myFirstFloor_v03-metric")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(maxHeight: .infinity)
-                        .scaleEffect(mapManager.scale)
-                        .offset(mapManager.offset)
-                        .clipped()
                     
-                    // Beacon Dots - positioned relative to the map
+                    // a. Beacon dots/pins placed by user (stacked above map)
                     ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                        BeaconDot(
-                            beacon: beacon,
-                            mapManager: mapManager,
-                            geometry: geometry
-                        )
+                        BeaconDot(beacon: beacon)
                     }
                 }
+                .scaleEffect(mapManager.scale)
+                .offset(mapManager.offset)
+                .clipped()
                 .gesture(
                     SimultaneousGesture(
                         // Pan gesture
@@ -60,7 +56,7 @@ struct MapView: View {
                     handleMapTap(at: location, in: geometry)
                 }
                 
-                // Armed Beacon Hint
+                // Armed Beacon Hint (outside the container so it doesn't move)
                 if let armedBeacon = beaconManager.armedBeacon {
                     VStack {
                         Spacer()
@@ -109,21 +105,29 @@ struct MapView: View {
         
         print("Map tapped at: \(location)")
         
-        // Convert tap location to map coordinates
-        let mapFrame = mapManager.getMapFrame(in: geometry)
-        print("Map frame: \(mapFrame)")
+        // Convert tap location to normalized coordinates (0-1)
+        // Since the container handles scaling/offsetting, we need to account for that
+        let containerScale = mapManager.scale
+        let containerOffset = mapManager.offset
         
-        let relativeLocation = CGPoint(
-            x: (location.x - mapFrame.minX) / mapFrame.width,
-            y: (location.y - mapFrame.minY) / mapFrame.height
+        // Reverse the container transformations to get the original tap location
+        let originalLocation = CGPoint(
+            x: (location.x - containerOffset.width) / containerScale,
+            y: (location.y - containerOffset.height) / containerScale
         )
         
-        print("Relative location: \(relativeLocation)")
+        // Convert to normalized coordinates
+        let normalizedLocation = CGPoint(
+            x: originalLocation.x / geometry.size.width,
+            y: originalLocation.y / geometry.size.height
+        )
         
-        // Clamp to map bounds
+        print("Normalized location: \(normalizedLocation)")
+        
+        // Clamp to bounds
         let clampedLocation = CGPoint(
-            x: max(0, min(1, relativeLocation.x)),
-            y: max(0, min(1, relativeLocation.y))
+            x: max(0, min(1, normalizedLocation.x)),
+            y: max(0, min(1, normalizedLocation.y))
         )
         
         print("Clamped location: \(clampedLocation)")
@@ -136,20 +140,10 @@ struct MapView: View {
 
 struct BeaconDot: View {
     let beacon: PlacedBeacon
-    @ObservedObject var mapManager: MapManager
-    let geometry: GeometryProxy
     
     var body: some View {
-        // Calculate the map's actual size and position
-        let mapSize = mapManager.getMapSize(in: geometry)
-        let mapOffset = mapManager.offset
-        
-        // Position the dot relative to the map image (not screen)
-        let dotPosition = CGPoint(
-            x: (beacon.position.x * mapSize.width) + mapOffset.width,
-            y: (beacon.position.y * mapSize.height) + mapOffset.height
-        )
-        
+        // Position the dot relative to the map image within the container
+        // The container handles all scaling and offsetting, so we just use normalized coordinates
         Circle()
             .fill(beacon.color)
             .frame(width: 12, height: 12)
@@ -157,7 +151,10 @@ struct BeaconDot: View {
                 Circle()
                     .stroke(Color.white, lineWidth: 2)
             )
-        .position(dotPosition)
+        .position(
+            x: beacon.position.x * UIScreen.main.bounds.width,
+            y: beacon.position.y * UIScreen.main.bounds.height
+        )
     }
 }
 

@@ -15,7 +15,7 @@ class MapManager: NSObject, ObservableObject {
     
     // Bounds checking
     private let minScale: CGFloat = 0.5
-    private let maxScale: CGFloat = 3.0
+    private let maxScale: CGFloat = 5.0  // Increased max zoom
     private let maxOffset: CGFloat = 500.0
     
     // Gesture state
@@ -127,6 +127,15 @@ class MapManager: NSObject, ObservableObject {
         scale = 1.0
         offset = .zero
         lastScale = 1.0
+        lastPanOffset = .zero
+    }
+    
+    // MARK: - Initial Setup
+    func setInitialZoom() {
+        // Set initial zoom to fill screen height
+        scale = 1.0
+        lastScale = 1.0
+        offset = .zero
         lastPanOffset = .zero
     }
 }

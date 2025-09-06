@@ -75,7 +75,9 @@ struct ContentView: View {
         }
         .onAppear {
             mapManager.requestLocationPermission()
+            mapManager.setInitialZoom()
             beaconManager.loadBeaconWhitelist()
+            beaconManager.clearAllPlacements()
         }
     }
 }

@@ -135,6 +135,12 @@ class BeaconManager: ObservableObject {
         print("Cleared all placed beacons.")
     }
     
+    func clearAllPlacements() {
+        placedBeacons = []
+        savePlacedBeacons()
+        print("Cleared all beacon placements.")
+    }
+    
     private func cleanupInvalidPlacements() {
         let validNames = Set(availableBeacons.map { $0.name })
         placedBeacons.removeAll { !validNames.contains($0.name) }
