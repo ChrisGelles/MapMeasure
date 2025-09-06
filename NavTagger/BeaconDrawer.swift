@@ -17,100 +17,41 @@ struct BeaconDrawer: View {
     ]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header
-            HStack {
-                Text("Beacon Placement")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                if !beaconManager.placedBeacons.isEmpty {
-                    Text("\(beaconManager.placedBeacons.count) placed")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(.systemGray5))
-                        )
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 8)
-            
-            // Instructions
-            if beaconManager.armedBeacon == nil {
-                Text("Select a beacon below, then tap on the map to place it.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.horizontal, 20)
-            }
-            
+        VStack(spacing: 8) {
             // Beacon Grid
             if beaconManager.availableBeacons.isEmpty {
-                VStack(spacing: 12) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.system(size: 32))
-                        .foregroundColor(.orange)
-                    
-                    Text("No beacons available")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text("Check that beacon_whitelist.txt is included in the app bundle.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 40)
+                Text("No beacons found")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 20)
             } else {
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 12) {
-                        ForEach(beaconManager.availableBeacons, id: \.name) { beacon in
-                            BeaconButton(
-                                beacon: beacon,
-                                isArmed: beaconManager.armedBeacon?.name == beacon.name,
-                                isPlaced: beaconManager.placedBeacons.contains { $0.name == beacon.name },
-                                action: {
-                                    if beaconManager.armedBeacon?.name == beacon.name {
-                                        beaconManager.cancelArmedBeacon()
-                                    } else {
-                                        beaconManager.armBeacon(beacon)
-                                    }
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(beaconManager.availableBeacons, id: \.name) { beacon in
+                        BeaconButton(
+                            beacon: beacon,
+                            isArmed: beaconManager.armedBeacon?.name == beacon.name,
+                            isPlaced: beaconManager.placedBeacons.contains { $0.name == beacon.name },
+                            action: {
+                                if beaconManager.armedBeacon?.name == beacon.name {
+                                    beaconManager.cancelArmedBeacon()
+                                } else {
+                                    beaconManager.armBeacon(beacon)
                                 }
-                            )
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                }
-            }
-            
-            // Placed Beacons Summary
-            if !beaconManager.placedBeacons.isEmpty {
-                VStack(alignment: .leading, spacing: 8) {
-                    Divider()
-                        .padding(.horizontal, 20)
-                    
-                    Text("Placed Beacons")
-                        .font(.headline)
-                        .padding(.horizontal, 20)
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                                PlacedBeaconChip(beacon: beacon)
                             }
-                        }
-                        .padding(.horizontal, 20)
+                        )
                     }
                 }
             }
         }
-        .padding(.bottom, 20)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: -5)
+        )
+        .frame(maxHeight: geometry.size.height * 0.2)
     }
 }
 

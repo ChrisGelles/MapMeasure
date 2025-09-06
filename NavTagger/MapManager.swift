@@ -70,6 +70,34 @@ class MapManager: NSObject, ObservableObject {
     }
     
     // MARK: - Map Frame Calculation
+    func getMapSize(in geometry: GeometryProxy) -> CGSize {
+        let screenSize = geometry.size
+        let imageAspectRatio: CGFloat = 1.0 // Assuming square image (2048x2048)
+        let screenAspectRatio = screenSize.width / screenSize.height
+        
+        var mapSize: CGSize
+        
+        if screenAspectRatio > imageAspectRatio {
+            // Screen is wider than image - fit to height
+            mapSize = CGSize(
+                width: screenSize.height * imageAspectRatio,
+                height: screenSize.height
+            )
+        } else {
+            // Screen is taller than image - fit to width
+            mapSize = CGSize(
+                width: screenSize.width,
+                height: screenSize.width / imageAspectRatio
+            )
+        }
+        
+        // Apply scale
+        return CGSize(
+            width: mapSize.width * scale,
+            height: mapSize.height * scale
+        )
+    }
+    
     func getMapFrame(in geometry: GeometryProxy) -> CGRect {
         let screenSize = geometry.size
         let imageAspectRatio: CGFloat = 1.0 // Assuming square image (2048x2048)

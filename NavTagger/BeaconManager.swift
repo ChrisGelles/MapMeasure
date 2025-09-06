@@ -130,33 +130,9 @@ class BeaconManager: ObservableObject {
     }
     
     private func loadPlacedBeacons() {
-        guard let data = UserDefaults.standard.array(forKey: persistenceKey) as? [[String: Any]] else {
-            return
-        }
-        
-        var loadedBeacons: [PlacedBeacon] = []
-        
-        for item in data {
-            guard let name = item["name"] as? String,
-                  let x = item["x"] as? CGFloat,
-                  let y = item["y"] as? CGFloat,
-                  let red = item["colorRed"] as? CGFloat,
-                  let green = item["colorGreen"] as? CGFloat,
-                  let blue = item["colorBlue"] as? CGFloat,
-                  let alpha = item["colorAlpha"] as? CGFloat else {
-                continue
-            }
-            
-            let color = Color(.sRGB, red: red, green: green, blue: blue, opacity: alpha)
-            let beacon = PlacedBeacon(
-                name: name,
-                position: CGPoint(x: x, y: y),
-                color: color
-            )
-            loadedBeacons.append(beacon)
-        }
-        
-        placedBeacons = loadedBeacons
+        // Clear all placed beacons for now
+        placedBeacons = []
+        print("Cleared all placed beacons.")
     }
     
     private func cleanupInvalidPlacements() {

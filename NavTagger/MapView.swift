@@ -14,49 +14,52 @@ struct MapView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Map Image
-                Image("myFirstFloor_v03-metric")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .scaleEffect(mapManager.scale)
-                    .offset(mapManager.offset)
-                    .clipped()
-                    .gesture(
-                        SimultaneousGesture(
-                            // Pan gesture
-                            DragGesture()
-                                .onChanged { value in
-                                    mapManager.updatePan(translation: value.translation)
-                                }
-                                .onEnded { _ in
-                                    mapManager.endPan()
-                                },
-                            
-                            // Zoom gesture
-                            MagnificationGesture()
-                                .onChanged { value in
-                                    mapManager.updateZoom(magnification: value)
-                                }
-                                .onEnded { _ in
-                                    mapManager.endZoom()
-                                }
+                // Map Image with Beacon Dots - All in one view with unified gestures
+                ZStack {
+                    // Map Image
+                    Image("myFirstFloor_v03-metric")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .scaleEffect(mapManager.scale)
+                        .offset(mapManager.offset)
+                        .clipped()
+                    
+                    // Beacon Dots - positioned relative to the map
+                    ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
+                        BeaconDot(
+                            beacon: beacon,
+                            mapManager: mapManager,
+                            geometry: geometry
                         )
-                    )
-                    .onTapGesture { location in
-                        // Only handle tap if it's within the map bounds
-                        let mapFrame = mapManager.getMapFrame(in: geometry)
-                        if mapFrame.contains(location) {
-                            handleMapTap(at: location, in: geometry)
-                        }
                     }
-                
-                // Beacon Dots
-                ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                    BeaconDot(
-                        beacon: beacon,
-                        mapManager: mapManager,
-                        geometry: geometry
+                }
+                .gesture(
+                    SimultaneousGesture(
+                        // Pan gesture
+                        DragGesture()
+                            .onChanged { value in
+                                mapManager.updatePan(translation: value.translation)
+                            }
+                            .onEnded { _ in
+                                mapManager.endPan()
+                            },
+                        
+                        // Zoom gesture
+                        MagnificationGesture()
+                            .onChanged { value in
+                                mapManager.updateZoom(magnification: value)
+                            }
+                            .onEnded { _ in
+                                mapManager.endZoom()
+                            }
                     )
+                )
+                .onTapGesture { location in
+                    // Only handle tap if it's within the map bounds
+                    let mapFrame = mapManager.getMapFrame(in: geometry)
+                    if mapFrame.contains(location) {
+                        handleMapTap(at: location, in: geometry)
+                    }
                 }
                 
                 // Armed Beacon Hint
@@ -126,10 +129,14 @@ struct BeaconDot: View {
     let geometry: GeometryProxy
     
     var body: some View {
-        let mapFrame = mapManager.getMapFrame(in: geometry)
-        let position = CGPoint(
-            x: mapFrame.minX + (beacon.position.x * mapFrame.width),
-            y: mapFrame.minY + (beacon.position.y * mapFrame.height)
+        // Calculate the map's actual size and position
+        let mapSize = mapManager.getMapSize(in: geometry)
+        let mapOffset = mapManager.offset
+        
+        // Position the dot relative to the map image (not screen)
+        let dotPosition = CGPoint(
+            x: (beacon.position.x * mapSize.width) + mapOffset.width,
+            y: (beacon.position.y * mapSize.height) + mapOffset.height
         )
         
         Circle()
@@ -139,7 +146,7 @@ struct BeaconDot: View {
                 Circle()
                     .stroke(Color.white, lineWidth: 2)
             )
-        .position(position)
+        .position(dotPosition)
     }
 }
 
