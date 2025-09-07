@@ -1,13 +1,13 @@
 //
-//  NavTaggerUITestsLaunchTests.swift
-//  NavTaggerUITests
+//  MapMeasureUITestsLaunchTests.swift
+//  MapMeasureUITests
 //
 //  Created by Chris Gelles on 9/4/25.
 //
 
 import XCTest
 
-final class NavTaggerUITestsLaunchTests: XCTestCase {
+final class MapMeasureUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
