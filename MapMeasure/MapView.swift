@@ -13,7 +13,13 @@ struct MapView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
+            PinchPanBridge(
+                scale: $mapManager.scale,
+                offset: $mapManager.offset,
+                onTap: { tapPoint in
+                    handleTap(at: tapPoint, geometry: geometry)
+                }
+            ) {
                 // Transformed container with map, measurements, and beacon pins
                 ZStack {
                     // Map Image
@@ -34,37 +40,19 @@ struct MapView: View {
                 }
                 .scaleEffect(mapManager.scale, anchor: .center)
                 .offset(mapManager.offset)
-                .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            mapManager.updatePan(translation: value.translation)
-                        }
-                        .onEnded { _ in
-                            mapManager.endPan()
-                        }
-                )
-                .overlay(
-                    PinchZoomView(
-                        scale: .constant(mapManager.scale),
-                        offset: .constant(mapManager.offset)
-                    ) { scale, center in
-                        mapManager.updateZoom(magnification: scale, center: center, geometry: geometry)
-                    } onZoomEnded: {
-                        mapManager.endZoom()
-                    }
-                )
-                .onTapGesture { location in
-                    if measurementManager.isCreatingMeasurement {
-                        // Convert tap location to normalized coordinates
-                        let normalizedX = location.x / geometry.size.width
-                        let normalizedY = location.y / geometry.size.height
-                        let defaultSize = CGSize(width: 0.1, height: 0.1) // 10% of screen size
-                        measurementManager.createMeasurement(at: CGPoint(x: normalizedX, y: normalizedY), size: defaultSize)
-                    }
-                }
             }
         }
         .edgesIgnoringSafeArea(.all)
+    }
+    
+    private func handleTap(at tapPoint: CGPoint, geometry: GeometryProxy) {
+        if measurementManager.isCreatingMeasurement {
+            // Normalize tap point to bridge view's bounds (0-1 range)
+            let normalizedX = tapPoint.x / geometry.size.width
+            let normalizedY = tapPoint.y / geometry.size.height
+            let defaultSize = CGSize(width: 0.1, height: 0.1) // 10% of screen size
+            measurementManager.createMeasurement(at: CGPoint(x: normalizedX, y: normalizedY), size: defaultSize)
+        }
     }
 }
 

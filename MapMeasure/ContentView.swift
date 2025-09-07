@@ -40,6 +40,7 @@ struct ContentView: View {
                     }
                     Spacer()
                 }
+                .allowsHitTesting(true) // Allow button to receive touches
             }
         }
         .onAppear {
