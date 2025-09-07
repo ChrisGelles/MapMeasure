@@ -27,7 +27,6 @@
 		6BD70D222E6A758400AE2C7B /* MapMeasure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapMeasure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BD70D2F2E6A758500AE2C7B /* MapMeasureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapMeasureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BD70D392E6A758500AE2C7B /* MapMeasureUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapMeasureUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BD70D4A2E6A758500AE2C7B /* MapMeasure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MapMeasure.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */

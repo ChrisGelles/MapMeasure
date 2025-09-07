@@ -8,6 +8,32 @@
 import SwiftUI
 import Foundation
 
+// MARK: - Map Calibration Constants
+// Calibration data for "myFirstFloor_v03-metric" map image
+// These values represent the normalized coordinate distance (0-1) that equals 1 meter in real-world space
+struct MapCalibration {
+    static let metersPerUnitX: Double = 0.08691406  // 1 meter = 0.08691406 normalized units on X axis
+    static let metersPerUnitY: Double = 0.04009912  // 1 meter = 0.04009912 normalized units on Y axis
+    static let mapImageName: String = "myFirstFloor_v03-metric"
+    
+    // Helper functions to convert between real-world meters and normalized coordinates
+    static func metersToNormalizedX(_ meters: Double) -> Double {
+        return meters * metersPerUnitX
+    }
+    
+    static func metersToNormalizedY(_ meters: Double) -> Double {
+        return meters * metersPerUnitY
+    }
+    
+    static func normalizedToMetersX(_ normalized: Double) -> Double {
+        return normalized / metersPerUnitX
+    }
+    
+    static func normalizedToMetersY(_ normalized: Double) -> Double {
+        return normalized / metersPerUnitY
+    }
+}
+
 // MARK: - Data Models
 struct Measurement: Identifiable {
     let id = UUID()

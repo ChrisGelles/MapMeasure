@@ -47,13 +47,36 @@ class MapManager: NSObject, ObservableObject {
         lastPanOffset = offset
     }
     
-    func updateZoom(magnification: CGFloat) {
+    func updateZoom(magnification: CGFloat, center: CGPoint, geometry: GeometryProxy) {
         let newScale = lastScale * magnification
-        scale = clampScale(newScale)
+        let clampedScale = clampScale(newScale)
+        
+        // Calculate the zoom center relative to the screen center
+        let screenCenter = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+        let zoomCenterOffset = CGPoint(
+            x: center.x - screenCenter.x,
+            y: center.y - screenCenter.y
+        )
+        
+        // Calculate how much the offset needs to change to keep the zoom center fixed
+        let scaleChange = clampedScale / lastScale
+        let offsetChange = CGSize(
+            width: zoomCenterOffset.x * (1 - scaleChange),
+            height: zoomCenterOffset.y * (1 - scaleChange)
+        )
+        
+        // Apply the new scale and adjusted offset
+        scale = clampedScale
+        let newOffset = CGSize(
+            width: lastPanOffset.width + offsetChange.width,
+            height: lastPanOffset.height + offsetChange.height
+        )
+        offset = clampOffset(newOffset)
     }
     
     func endZoom() {
         lastScale = scale
+        lastPanOffset = offset
     }
     
     // MARK: - Bounds Checking

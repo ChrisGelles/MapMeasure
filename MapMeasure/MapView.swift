@@ -43,14 +43,15 @@ struct MapView: View {
                             mapManager.endPan()
                         }
                 )
-                .simultaneousGesture(
-                    MagnificationGesture()
-                        .onChanged { value in
-                            mapManager.updateZoom(magnification: value)
-                        }
-                        .onEnded { _ in
-                            mapManager.endZoom()
-                        }
+                .overlay(
+                    PinchZoomView(
+                        scale: .constant(mapManager.scale),
+                        offset: .constant(mapManager.offset)
+                    ) { scale, center in
+                        mapManager.updateZoom(magnification: scale, center: center, geometry: geometry)
+                    } onZoomEnded: {
+                        mapManager.endZoom()
+                    }
                 )
                 .onTapGesture { location in
                     if measurementManager.isCreatingMeasurement {
