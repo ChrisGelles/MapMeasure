@@ -34,6 +34,7 @@ class MeasurementManager: ObservableObject {
     
     private let persistenceKey = "measurements"
     private let beaconPersistenceKey = "placedBeacons" // NavTagger's key
+    private let sharedUserDefaults = UserDefaults(suiteName: "group.com.cmnh.beaconapps") ?? UserDefaults.standard
     
     init() {
         loadMeasurements()
@@ -208,7 +209,7 @@ extension UIColor {
 // MARK: - Beacon Pin Loading from NavTagger
 extension MeasurementManager {
     func loadBeaconPinsFromNavTagger() {
-        guard let data = UserDefaults.standard.array(forKey: beaconPersistenceKey) as? [[String: Any]] else {
+        guard let data = sharedUserDefaults.array(forKey: beaconPersistenceKey) as? [[String: Any]] else {
             print("No beacon data found from NavTagger.")
             return
         }

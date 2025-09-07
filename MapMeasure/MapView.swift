@@ -14,49 +14,52 @@ struct MapView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Map Image
-                Image("myFirstFloor_v03-metric")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(maxHeight: .infinity)
-                    .scaleEffect(mapManager.scale, anchor: .center)
-                    .offset(mapManager.offset)
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                mapManager.updatePan(translation: value.translation)
-                            }
-                            .onEnded { _ in
-                                mapManager.endPan()
-                            }
-                    )
-                    .simultaneousGesture(
-                        MagnificationGesture()
-                            .onChanged { value in
-                                mapManager.updateZoom(magnification: value)
-                            }
-                            .onEnded { _ in
-                                mapManager.endZoom()
-                            }
-                    )
-                    .onTapGesture { location in
-                        if measurementManager.isCreatingMeasurement {
-                            // Convert tap location to normalized coordinates
-                            let normalizedX = location.x / geometry.size.width
-                            let normalizedY = location.y / geometry.size.height
-                            let defaultSize = CGSize(width: 0.1, height: 0.1) // 10% of screen size
-                            measurementManager.createMeasurement(at: CGPoint(x: normalizedX, y: normalizedY), size: defaultSize)
-                        }
+                // Transformed container with map, measurements, and beacon pins
+                ZStack {
+                    // Map Image
+                    Image("myFirstFloor_v03-metric")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: .infinity)
+                    
+                    // Measurement squares
+                    ForEach(measurementManager.measurements, id: \.id) { measurement in
+                        MeasurementSquare(measurement: measurement, geometry: geometry)
                     }
-                
-                // Measurement squares
-                ForEach(measurementManager.measurements, id: \.id) { measurement in
-                    MeasurementSquare(measurement: measurement, geometry: geometry)
+                    
+                    // Beacon pins from NavTagger
+                    ForEach(measurementManager.beaconPins, id: \.id) { beacon in
+                        BeaconPinView(beacon: beacon, geometry: geometry)
+                    }
                 }
-                
-                // Beacon pins from NavTagger
-                ForEach(measurementManager.beaconPins, id: \.id) { beacon in
-                    BeaconPinView(beacon: beacon, geometry: geometry)
+                .scaleEffect(mapManager.scale, anchor: .center)
+                .offset(mapManager.offset)
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            mapManager.updatePan(translation: value.translation)
+                        }
+                        .onEnded { _ in
+                            mapManager.endPan()
+                        }
+                )
+                .simultaneousGesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            mapManager.updateZoom(magnification: value)
+                        }
+                        .onEnded { _ in
+                            mapManager.endZoom()
+                        }
+                )
+                .onTapGesture { location in
+                    if measurementManager.isCreatingMeasurement {
+                        // Convert tap location to normalized coordinates
+                        let normalizedX = location.x / geometry.size.width
+                        let normalizedY = location.y / geometry.size.height
+                        let defaultSize = CGSize(width: 0.1, height: 0.1) // 10% of screen size
+                        measurementManager.createMeasurement(at: CGPoint(x: normalizedX, y: normalizedY), size: defaultSize)
+                    }
                 }
             }
         }
