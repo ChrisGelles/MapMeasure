@@ -1,8 +1,0 @@
-# Beacon Whitelist for NavTagger
-# One beacon name per line
-# Lines starting with # are comments and will be ignored
-
-14-jazzyWombat
-15-frostyIbis
-16-emberMarmot
-17-thornyPangolin

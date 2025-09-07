@@ -12,37 +12,37 @@
 			containerPortal = 6BD70D1A2E6A758400AE2C7B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6BD70D212E6A758400AE2C7B;
-			remoteInfo = NavTagger;
+			remoteInfo = MapMeasure;
 		};
 		6BD70D3A2E6A758500AE2C7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6BD70D1A2E6A758400AE2C7B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6BD70D212E6A758400AE2C7B;
-			remoteInfo = NavTagger;
+			remoteInfo = MapMeasure;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6BD70D222E6A758400AE2C7B /* NavTagger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavTagger.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BD70D2F2E6A758500AE2C7B /* NavTaggerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NavTaggerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6BD70D392E6A758500AE2C7B /* NavTaggerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NavTaggerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BD70D222E6A758400AE2C7B /* MapMeasure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapMeasure.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BD70D2F2E6A758500AE2C7B /* MapMeasureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapMeasureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BD70D392E6A758500AE2C7B /* MapMeasureUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapMeasureUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6BD70D242E6A758400AE2C7B /* NavTagger */ = {
+		6BD70D242E6A758400AE2C7B /* MapMeasure */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NavTagger;
+			path = MapMeasure;
 			sourceTree = "<group>";
 		};
-		6BD70D322E6A758500AE2C7B /* NavTaggerTests */ = {
+		6BD70D322E6A758500AE2C7B /* MapMeasureTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NavTaggerTests;
+			path = MapMeasureTests;
 			sourceTree = "<group>";
 		};
-		6BD70D3C2E6A758500AE2C7B /* NavTaggerUITests */ = {
+		6BD70D3C2E6A758500AE2C7B /* MapMeasureUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = NavTaggerUITests;
+			path = MapMeasureUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		6BD70D192E6A758400AE2C7B = {
 			isa = PBXGroup;
 			children = (
-				6BD70D242E6A758400AE2C7B /* NavTagger */,
-				6BD70D322E6A758500AE2C7B /* NavTaggerTests */,
-				6BD70D3C2E6A758500AE2C7B /* NavTaggerUITests */,
+				6BD70D242E6A758400AE2C7B /* MapMeasure */,
+				6BD70D322E6A758500AE2C7B /* MapMeasureTests */,
+				6BD70D3C2E6A758500AE2C7B /* MapMeasureUITests */,
 				6BD70D232E6A758400AE2C7B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		6BD70D232E6A758400AE2C7B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6BD70D222E6A758400AE2C7B /* NavTagger.app */,
-				6BD70D2F2E6A758500AE2C7B /* NavTaggerTests.xctest */,
-				6BD70D392E6A758500AE2C7B /* NavTaggerUITests.xctest */,
+				6BD70D222E6A758400AE2C7B /* MapMeasure.app */,
+				6BD70D2F2E6A758500AE2C7B /* MapMeasureTests.xctest */,
+				6BD70D392E6A758500AE2C7B /* MapMeasureUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6BD70D212E6A758400AE2C7B /* NavTagger */ = {
+		6BD70D212E6A758400AE2C7B /* MapMeasure */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6BD70D432E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTagger" */;
+			buildConfigurationList = 6BD70D432E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasure" */;
 			buildPhases = (
 				6BD70D1E2E6A758400AE2C7B /* Sources */,
 				6BD70D1F2E6A758400AE2C7B /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6BD70D242E6A758400AE2C7B /* NavTagger */,
+				6BD70D242E6A758400AE2C7B /* MapMeasure */,
 			);
-			name = NavTagger;
+			name = MapMeasure;
 			packageProductDependencies = (
 			);
-			productName = NavTagger;
-			productReference = 6BD70D222E6A758400AE2C7B /* NavTagger.app */;
+			productName = MapMeasure;
+			productReference = 6BD70D222E6A758400AE2C7B /* MapMeasure.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6BD70D2E2E6A758500AE2C7B /* NavTaggerTests */ = {
+		6BD70D2E2E6A758500AE2C7B /* MapMeasureTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6BD70D462E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTaggerTests" */;
+			buildConfigurationList = 6BD70D462E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasureTests" */;
 			buildPhases = (
 				6BD70D2B2E6A758500AE2C7B /* Sources */,
 				6BD70D2C2E6A758500AE2C7B /* Frameworks */,
@@ -131,18 +131,18 @@
 				6BD70D312E6A758500AE2C7B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				6BD70D322E6A758500AE2C7B /* NavTaggerTests */,
+				6BD70D322E6A758500AE2C7B /* MapMeasureTests */,
 			);
-			name = NavTaggerTests;
+			name = MapMeasureTests;
 			packageProductDependencies = (
 			);
-			productName = NavTaggerTests;
-			productReference = 6BD70D2F2E6A758500AE2C7B /* NavTaggerTests.xctest */;
+			productName = MapMeasureTests;
+			productReference = 6BD70D2F2E6A758500AE2C7B /* MapMeasureTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		6BD70D382E6A758500AE2C7B /* NavTaggerUITests */ = {
+		6BD70D382E6A758500AE2C7B /* MapMeasureUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6BD70D492E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTaggerUITests" */;
+			buildConfigurationList = 6BD70D492E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasureUITests" */;
 			buildPhases = (
 				6BD70D352E6A758500AE2C7B /* Sources */,
 				6BD70D362E6A758500AE2C7B /* Frameworks */,
@@ -154,13 +154,13 @@
 				6BD70D3B2E6A758500AE2C7B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				6BD70D3C2E6A758500AE2C7B /* NavTaggerUITests */,
+				6BD70D3C2E6A758500AE2C7B /* MapMeasureUITests */,
 			);
-			name = NavTaggerUITests;
+			name = MapMeasureUITests;
 			packageProductDependencies = (
 			);
-			productName = NavTaggerUITests;
-			productReference = 6BD70D392E6A758500AE2C7B /* NavTaggerUITests.xctest */;
+			productName = MapMeasureUITests;
+			productReference = 6BD70D392E6A758500AE2C7B /* MapMeasureUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6BD70D1D2E6A758400AE2C7B /* Build configuration list for PBXProject "NavTagger" */;
+			buildConfigurationList = 6BD70D1D2E6A758400AE2C7B /* Build configuration list for PBXProject "MapMeasure" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6BD70D212E6A758400AE2C7B /* NavTagger */,
-				6BD70D2E2E6A758500AE2C7B /* NavTaggerTests */,
-				6BD70D382E6A758500AE2C7B /* NavTaggerUITests */,
+				6BD70D212E6A758400AE2C7B /* MapMeasure */,
+				6BD70D2E2E6A758500AE2C7B /* MapMeasureTests */,
+				6BD70D382E6A758500AE2C7B /* MapMeasureUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		6BD70D312E6A758500AE2C7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6BD70D212E6A758400AE2C7B /* NavTagger */;
+			target = 6BD70D212E6A758400AE2C7B /* MapMeasure */;
 			targetProxy = 6BD70D302E6A758500AE2C7B /* PBXContainerItemProxy */;
 		};
 		6BD70D3B2E6A758500AE2C7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6BD70D212E6A758400AE2C7B /* NavTagger */;
+			target = 6BD70D212E6A758400AE2C7B /* MapMeasure */;
 			targetProxy = 6BD70D3A2E6A758500AE2C7B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -411,7 +411,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTagger;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -440,7 +440,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTagger;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -458,12 +458,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTaggerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasureTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NavTagger.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NavTagger";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapMeasure.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MapMeasure";
 			};
 			name = Debug;
 		};
@@ -477,12 +477,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTaggerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasureTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NavTagger.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NavTagger";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapMeasure.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MapMeasure";
 			};
 			name = Release;
 		};
@@ -494,12 +494,12 @@
 				DEVELOPMENT_TEAM = XSA4USUHDC;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTaggerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NavTagger;
+				TEST_TARGET_NAME = MapMeasure;
 			};
 			name = Debug;
 		};
@@ -511,19 +511,19 @@
 				DEVELOPMENT_TEAM = XSA4USUHDC;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = CMNH.NavTaggerUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = CMNH.MapMeasureUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = NavTagger;
+				TEST_TARGET_NAME = MapMeasure;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6BD70D1D2E6A758400AE2C7B /* Build configuration list for PBXProject "NavTagger" */ = {
+		6BD70D1D2E6A758400AE2C7B /* Build configuration list for PBXProject "MapMeasure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BD70D412E6A758500AE2C7B /* Debug */,
@@ -532,7 +532,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6BD70D432E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTagger" */ = {
+		6BD70D432E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BD70D442E6A758500AE2C7B /* Debug */,
@@ -541,7 +541,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6BD70D462E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTaggerTests" */ = {
+		6BD70D462E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasureTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BD70D472E6A758500AE2C7B /* Debug */,
@@ -550,7 +550,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6BD70D492E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "NavTaggerUITests" */ = {
+		6BD70D492E6A758500AE2C7B /* Build configuration list for PBXNativeTarget "MapMeasureUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6BD70D4A2E6A758500AE2C7B /* Debug */,

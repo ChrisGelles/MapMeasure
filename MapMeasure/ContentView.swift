@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  NavTagger
+//  MapMeasure
 //
 //  Created by Chris Gelles on 9/6/25.
 //
@@ -9,21 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var mapManager = MapManager()
-    @StateObject private var beaconManager = BeaconManager()
+    @StateObject private var measurementManager = MeasurementManager()
     @State private var selectedDrawer: DrawerType? = nil
     
     enum DrawerType: String, CaseIterable {
-        case beacons = "beacons"
+        case measure = "measure"
         
         var icon: String {
             switch self {
-            case .beacons: return "target"
+            case .measure: return "ruler"
             }
         }
         
         var title: String {
             switch self {
-            case .beacons: return "Beacons"
+            case .measure: return "Measure"
             }
         }
     }
@@ -32,7 +32,7 @@ struct ContentView: View {
         GeometryReader { geometry in
             ZStack {
                 // Map View
-                MapView(mapManager: mapManager, beaconManager: beaconManager)
+                MapView(mapManager: mapManager, measurementManager: measurementManager)
                     .ignoresSafeArea()
                 
                 // Bottom Drawer System
@@ -59,9 +59,9 @@ struct ContentView: View {
                         
                         Spacer()
                         
-                        // Clear Beacon Positions Button
+                        // Clear Measurements Button
                         Button(action: {
-                            beaconManager.clearAllPlacements()
+                            measurementManager.clearAllMeasurements()
                         }) {
                             HStack(spacing: 6) {
                                 Image(systemName: "trash")
@@ -91,7 +91,7 @@ struct ContentView: View {
                         DrawerContent(
                             type: selectedDrawer,
                             mapManager: mapManager,
-                            beaconManager: beaconManager,
+                            measurementManager: measurementManager,
                             geometry: geometry
                         )
                         .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -102,7 +102,6 @@ struct ContentView: View {
         .onAppear {
             mapManager.requestLocationPermission()
             mapManager.setInitialZoom()
-            beaconManager.loadBeaconWhitelist()
         }
     }
 }
@@ -135,7 +134,7 @@ struct DrawerTab: View {
 struct DrawerContent: View {
     let type: ContentView.DrawerType
     let mapManager: MapManager
-    let beaconManager: BeaconManager
+    let measurementManager: MeasurementManager
     let geometry: GeometryProxy
     
     var body: some View {
@@ -149,9 +148,9 @@ struct DrawerContent: View {
             
             // Drawer Content
             switch type {
-            case .beacons:
-                BeaconDrawer(
-                    beaconManager: beaconManager,
+            case .measure:
+                MeasurementDrawer(
+                    measurementManager: measurementManager,
                     mapManager: mapManager,
                     geometry: geometry
                 )

@@ -1,6 +1,6 @@
 //
 //  MapView.swift
-//  NavTagger
+//  MapMeasure
 //
 //  Created by Chris Gelles on 9/6/25.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MapView: View {
     @ObservedObject var mapManager: MapManager
-    @ObservedObject var beaconManager: BeaconManager
+    @ObservedObject var measurementManager: MeasurementManager
     
     var body: some View {
         GeometryReader { geometry in
@@ -31,9 +31,9 @@ struct MapView: View {
                             .frame(maxHeight: .infinity)
                             .opacity(0.5) // Make it semi-transparent so we can see the map underneath
                         
-                        // a. Beacon dots/pins placed by user (stacked above map and grid)
-                        ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                            BeaconDot(beacon: beacon, mapContentSize: mapGeometry.size)
+                        // a. Measurements placed by user (stacked above map and grid)
+                        ForEach(measurementManager.measurements) { measurement in
+                            MeasurementSquare(measurement: measurement, mapContentSize: mapGeometry.size)
                         }
                         
                         // Debug overlay - border around the map container bounds
@@ -126,8 +126,8 @@ struct MapView: View {
     }
     
     private func handleMapTap(at location: CGPoint, mapContentSize: CGSize) {
-        guard let armedBeacon = beaconManager.armedBeacon else { 
-            print("No armed beacon for placement")
+        guard measurementManager.isCreatingMeasurement else { 
+            print("Not in measurement creation mode")
             return 
         }
         
@@ -150,34 +150,40 @@ struct MapView: View {
         
         print("Clamped location: \(clampedLocation)")
         
-        // Place the beacon
-        beaconManager.placeBeacon(armedBeacon, at: clampedLocation)
-        print("Beacon placed: \(armedBeacon.name)")
+        // Create a default size measurement (will be resizable)
+        let defaultSize = CGSize(width: 0.1, height: 0.1) // 10% of map size
+        measurementManager.createMeasurement(at: clampedLocation, size: defaultSize)
+        print("Measurement created at: \(clampedLocation)")
     }
 }
 
-struct BeaconDot: View {
-    let beacon: PlacedBeacon
+struct MeasurementSquare: View {
+    let measurement: Measurement
     let mapContentSize: CGSize
     
     var body: some View {
-        // Convert normalized coordinates to position within the map container
+        // Convert normalized coordinates to position and size within the map container
         let position = CGPoint(
-            x: beacon.position.x * mapContentSize.width,
-            y: beacon.position.y * mapContentSize.height
+            x: measurement.position.x * mapContentSize.width,
+            y: measurement.position.y * mapContentSize.height
         )
         
-        Circle()
-            .fill(beacon.color)
-            .frame(width: 12, height: 12)
+        let size = CGSize(
+            width: measurement.size.width * mapContentSize.width,
+            height: measurement.size.height * mapContentSize.height
+        )
+        
+        Rectangle()
+            .fill(measurement.fillColor.opacity(0.3))
             .overlay(
-                Circle()
-                    .stroke(Color.white, lineWidth: 2)
+                Rectangle()
+                    .stroke(measurement.strokeColor, lineWidth: 1)
             )
-        .position(position)
+            .frame(width: size.width, height: size.height)
+            .position(position)
     }
 }
 
 #Preview {
-    MapView(mapManager: MapManager(), beaconManager: BeaconManager())
+    MapView(mapManager: MapManager(), measurementManager: MeasurementManager())
 }
