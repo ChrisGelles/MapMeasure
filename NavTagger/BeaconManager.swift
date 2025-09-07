@@ -55,7 +55,7 @@ class BeaconManager: ObservableObject {
         }
         
         do {
-            let content = try String(contentsOf: url)
+            let content = try String(contentsOf: url, encoding: .utf8)
             let lines = content.components(separatedBy: .newlines)
             
             var beacons: [BeaconInfo] = []

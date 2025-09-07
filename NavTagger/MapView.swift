@@ -13,70 +13,74 @@ struct MapView: View {
     
     var body: some View {
         GeometryReader { geometry in
+            let baseSide = geometry.size.height
             ZStack {
                 // 1. Container (can be panned and zoomed with gestures. Everything inside moves together)
-                ZStack {
-                    // b. Map Image
-                    Image("myFirstFloor_v03-metric")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: .infinity)
-                    
-                    // Grid overlay for coordinate system testing
-                    Image("blackGrid")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: .infinity)
-                        .opacity(0.5) // Make it semi-transparent so we can see the map underneath
-                    
-                    // a. Beacon dots/pins placed by user (stacked above map and grid)
-                    ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
-                        BeaconDot(beacon: beacon, mapManager: mapManager, geometry: geometry)
+                GeometryReader { mapGeometry in
+                    ZStack {
+                        // b. Map Image
+                        Image("myFirstFloor_v03-metric")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxHeight: .infinity)
+                        
+                        // Grid overlay for coordinate system testing
+                        Image("blackGrid")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxHeight: .infinity)
+                            .opacity(0.5) // Make it semi-transparent so we can see the map underneath
+                        
+                        // a. Beacon dots/pins placed by user (stacked above map and grid)
+                        ForEach(beaconManager.placedBeacons, id: \.name) { beacon in
+                            BeaconDot(beacon: beacon, mapContentSize: mapGeometry.size)
+                        }
+                        
+                        // Debug overlay - border around the map container bounds
+                        Rectangle()
+                            .stroke(Color.red, lineWidth: 2)
+                            .frame(
+                                width: mapGeometry.size.width,
+                                height: mapGeometry.size.height
+                            )
+                            .position(
+                                x: mapGeometry.size.width / 2,
+                                y: mapGeometry.size.height / 2
+                            )
                     }
-                    
-                    // Debug overlay - border around the original map rect (before transforms)
-                    Rectangle()
-                        .stroke(Color.red, lineWidth: 2)
-                        .frame(
-                            width: geometry.size.height/2,  // Original map width (square)
-                            height: geometry.size.height/2  // Original map height (square)
-                        )
-                        .position(
-                            x: geometry.size.width / 2,   // Center horizontally
-                            y: geometry.size.height / 2   // Center vertically
-                        )
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                // If drag distance is significant, treat as pan
+                                let dragDistance = sqrt(value.translation.width * value.translation.width + value.translation.height * value.translation.height)
+                                if dragDistance > 10 {
+                                    mapManager.updatePan(translation: value.translation)
+                                }
+                            }
+                            .onEnded { value in
+                                // If drag distance is small, treat as tap
+                                let dragDistance = sqrt(value.translation.width * value.translation.width + value.translation.height * value.translation.height)
+                                if dragDistance <= 10 {
+                                    let tapLocation = value.location
+                                    handleMapTap(at: tapLocation, mapContentSize: mapGeometry.size)
+                                } else {
+                                    mapManager.endPan()
+                                }
+                            }
+                    )
                 }
                 .coordinateSpace(name: "mapSpace")
                 .scaleEffect(mapManager.scale)
                 .offset(mapManager.offset)
                 .clipped()
                 .gesture(
-                    SimultaneousGesture(
-                        // Pan gesture
-                        DragGesture()
-                            .onChanged { value in
-                                mapManager.updatePan(translation: value.translation)
-                            }
-                            .onEnded { _ in
-                                mapManager.endPan()
-                            },
-                        
-                        // Zoom gesture
-                        MagnificationGesture()
-                            .onChanged { value in
-                                mapManager.updateZoom(magnification: value)
-                            }
-                            .onEnded { _ in
-                                mapManager.endZoom()
-                            }
-                    )
-                )
-                .gesture(
-                    SpatialTapGesture()
-                        .onEnded { value in
-                            // Get tap location in the map's coordinate space
-                            let tapLocation = value.location
-                            handleMapTap(at: tapLocation, in: geometry)
+                    // Zoom gesture
+                    MagnificationGesture()
+                        .onChanged { value in
+                            mapManager.updateZoom(magnification: value)
+                        }
+                        .onEnded { _ in
+                            mapManager.endZoom()
                         }
                 )
                 
@@ -121,22 +125,19 @@ struct MapView: View {
         .edgesIgnoringSafeArea(.all)
     }
     
-    private func handleMapTap(at location: CGPoint, in geometry: GeometryProxy) {
+    private func handleMapTap(at location: CGPoint, mapContentSize: CGSize) {
         guard let armedBeacon = beaconManager.armedBeacon else { 
             print("No armed beacon for placement")
             return 
         }
         
         print("Map tapped at: \(location)")
+        print("Map content size: \(mapContentSize)")
         
-        // Get the authoritative displayed map rect
-        let rect = mapManager.getDisplayedMapRect(in: geometry)
-        print("Displayed map rect: \(rect)")
-        
-        // Normalize tap location within the displayed map rect
+        // Normalize tap location within the map container's bounds
         let normalizedLocation = CGPoint(
-            x: (location.x - rect.minX) / rect.width,
-            y: (location.y - rect.minY) / rect.height
+            x: location.x / mapContentSize.width,
+            y: location.y / mapContentSize.height
         )
         
         print("Normalized location: \(normalizedLocation)")
@@ -157,22 +158,13 @@ struct MapView: View {
 
 struct BeaconDot: View {
     let beacon: PlacedBeacon
-    @ObservedObject var mapManager: MapManager
-    let geometry: GeometryProxy
+    let mapContentSize: CGSize
     
     var body: some View {
-        // Get the original (untransformed) map rect
-        let originalRect = CGRect(
-            x: (geometry.size.width - geometry.size.height) / 2,  // Center horizontally
-            y: 0,                                                 // Top edge
-            width: geometry.size.height,                          // Square width
-            height: geometry.size.height                          // Square height
-        )
-        
-        // Convert normalized coordinates to original screen position
-        let screenPosition = CGPoint(
-            x: originalRect.minX + (beacon.position.x * originalRect.width),
-            y: originalRect.minY + (beacon.position.y * originalRect.height)
+        // Convert normalized coordinates to position within the map container
+        let position = CGPoint(
+            x: beacon.position.x * mapContentSize.width,
+            y: beacon.position.y * mapContentSize.height
         )
         
         Circle()
@@ -182,7 +174,7 @@ struct BeaconDot: View {
                 Circle()
                     .stroke(Color.white, lineWidth: 2)
             )
-        .position(screenPosition)
+        .position(position)
     }
 }
 
