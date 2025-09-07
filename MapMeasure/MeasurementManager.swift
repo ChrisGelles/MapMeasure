@@ -18,16 +18,26 @@ struct Measurement: Identifiable {
     var realWorldSize: Float? = nil // Size in meters (user input)
 }
 
+struct BeaconPin: Identifiable {
+    let id = UUID()
+    let name: String
+    let position: CGPoint // Normalized coordinates (0-1)
+    let color: Color
+}
+
 // MARK: - Measurement Manager
 class MeasurementManager: ObservableObject {
     @Published var measurements: [Measurement] = []
     @Published var isCreatingMeasurement: Bool = false
     @Published var currentMeasurement: Measurement? = nil
+    @Published var beaconPins: [BeaconPin] = []
     
     private let persistenceKey = "measurements"
+    private let beaconPersistenceKey = "placedBeacons" // NavTagger's key
     
     init() {
         loadMeasurements()
+        loadBeaconPinsFromNavTagger()
     }
     
     // MARK: - Measurement Creation
@@ -192,5 +202,40 @@ extension UIColor {
         var alpha: CGFloat = 0
         getRed(nil, green: nil, blue: nil, alpha: &alpha)
         return alpha
+    }
+}
+
+// MARK: - Beacon Pin Loading from NavTagger
+extension MeasurementManager {
+    func loadBeaconPinsFromNavTagger() {
+        guard let data = UserDefaults.standard.array(forKey: beaconPersistenceKey) as? [[String: Any]] else {
+            print("No beacon data found from NavTagger.")
+            return
+        }
+        
+        var loadedPins: [BeaconPin] = []
+        
+        for beaconData in data {
+            guard let name = beaconData["name"] as? String,
+                  let x = beaconData["x"] as? CGFloat,
+                  let y = beaconData["y"] as? CGFloat,
+                  let red = beaconData["colorRed"] as? CGFloat,
+                  let green = beaconData["colorGreen"] as? CGFloat,
+                  let blue = beaconData["colorBlue"] as? CGFloat,
+                  let alpha = beaconData["colorAlpha"] as? CGFloat else {
+                continue
+            }
+            
+            let color = Color(UIColor(red: red, green: green, blue: blue, alpha: alpha))
+            let pin = BeaconPin(
+                name: name,
+                position: CGPoint(x: x, y: y),
+                color: color
+            )
+            loadedPins.append(pin)
+        }
+        
+        beaconPins = loadedPins
+        print("Loaded \(beaconPins.count) beacon pins from NavTagger")
     }
 }
