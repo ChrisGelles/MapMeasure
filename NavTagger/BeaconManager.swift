@@ -130,9 +130,37 @@ class BeaconManager: ObservableObject {
     }
     
     private func loadPlacedBeacons() {
-        // Clear all placed beacons for now
-        placedBeacons = []
-        print("Cleared all placed beacons.")
+        guard let data = UserDefaults.standard.array(forKey: persistenceKey) as? [[String: Any]] else {
+            print("No saved beacon placements found.")
+            return
+        }
+        
+        var loadedBeacons: [PlacedBeacon] = []
+        
+        for beaconData in data {
+            guard let name = beaconData["name"] as? String,
+                  let x = beaconData["x"] as? CGFloat,
+                  let y = beaconData["y"] as? CGFloat,
+                  let red = beaconData["colorRed"] as? CGFloat,
+                  let green = beaconData["colorGreen"] as? CGFloat,
+                  let blue = beaconData["colorBlue"] as? CGFloat,
+                  let alpha = beaconData["colorAlpha"] as? CGFloat else {
+                continue
+            }
+            
+            let position = CGPoint(x: x, y: y)
+            let color = Color(UIColor(red: red, green: green, blue: blue, alpha: alpha))
+            
+            let placedBeacon = PlacedBeacon(
+                name: name,
+                position: position,
+                color: color
+            )
+            loadedBeacons.append(placedBeacon)
+        }
+        
+        placedBeacons = loadedBeacons
+        print("Loaded \(loadedBeacons.count) beacon placements from storage.")
     }
     
     func clearAllPlacements() {

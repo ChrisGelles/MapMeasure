@@ -39,7 +39,7 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     
-                    // Drawer Tabs
+                    // Drawer Tabs and Clear Button
                     HStack(spacing: 12) {
                         ForEach(DrawerType.allCases, id: \.self) { drawerType in
                             DrawerTab(
@@ -56,6 +56,32 @@ struct ContentView: View {
                                 }
                             )
                         }
+                        
+                        Spacer()
+                        
+                        // Clear Beacon Positions Button
+                        Button(action: {
+                            beaconManager.clearAllPlacements()
+                        }) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "trash")
+                                    .font(.system(size: 14, weight: .medium))
+                                Text("Clear")
+                                    .font(.system(size: 12, weight: .medium))
+                            }
+                            .foregroundColor(.red)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .fill(Color.red.opacity(0.1))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                                    )
+                            )
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 10)
@@ -77,7 +103,6 @@ struct ContentView: View {
             mapManager.requestLocationPermission()
             mapManager.setInitialZoom()
             beaconManager.loadBeaconWhitelist()
-            beaconManager.clearAllPlacements()
         }
     }
 }
