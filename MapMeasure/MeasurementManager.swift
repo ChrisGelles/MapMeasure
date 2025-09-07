@@ -122,7 +122,7 @@ class MeasurementManager: ObservableObject {
                 "colorGreen": UIColor(measurement.fillColor).green,
                 "colorBlue": UIColor(measurement.fillColor).blue,
                 "colorAlpha": UIColor(measurement.fillColor).alpha,
-                "realWorldSize": measurement.realWorldSize ?? NSNull()
+                "realWorldSize": measurement.realWorldSize as Any
             ]
         }
         

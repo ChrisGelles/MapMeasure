@@ -130,6 +130,6 @@ struct MeasurementRow: View {
         mapManager: MapManager(),
         geometry: GeometryReader { geometry in
             Color.clear
-        }.frame(width: 300, height: 200)
+        }.frame(width: 300, height: 200) as! GeometryProxy
     )
 }
