@@ -10,12 +10,13 @@ import SwiftUI
 struct ContentView: View {
     @State private var mapManager = MapManager()
     @State private var measurementManager = MeasurementManager()
+    @StateObject private var viewport = ViewportState()
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 // Map View
-                MapView(mapManager: mapManager, measurementManager: measurementManager)
+                MapView(mapManager: mapManager, measurementManager: measurementManager, viewport: viewport)
                     .ignoresSafeArea()
                 
                 // Reset View Button
@@ -23,7 +24,7 @@ struct ContentView: View {
                     HStack {
                         Spacer()
                         Button(action: {
-                            mapManager.resetToInitialPosition()
+                            viewport.resetTransform()
                         }) {
                             Image(systemName: "arrow.clockwise")
                                 .font(.system(size: 24, weight: .medium))
